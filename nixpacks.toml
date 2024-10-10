@@ -3,10 +3,9 @@ builder = "nixpacks"
 buildCommand = "npm install && echo Building bossmanbot!"
 
 [phases]
-  [phases.build]
-  runtime = "nodejs@16.5.0"
+  [phases.setup]
+  nodejs = "16.5.0"
 
 [deploy]
 startCommand = "node main.js"
 restartPolicyType = "always"
-# Remove the healthcheck since the bot is not a web service
