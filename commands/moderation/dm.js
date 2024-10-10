@@ -1,6 +1,6 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { MessageEmbed } = require('discord.js');
-const { sleep } = require('../utils/sleep'); // Custom sleep utility to handle delay
+const sleep = require('../../utils/sleep'); // Custom sleep utility to handle delay
 const ms = require('ms');
 
 module.exports = {
