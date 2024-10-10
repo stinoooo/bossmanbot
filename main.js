@@ -111,12 +111,13 @@ client.once('ready', async () => {
   
     // Set default status to 'Listening to bossman' and online status to 'idle'
     client.user.setPresence({
+      status: 'idle',
       activities: [{ name: 'bossman', type: 'LISTENING' }],
-      status: 'idle'
     });
   
     scheduleMessages(client);
   });
+  
   
 
 // Log in using the token from environment variables

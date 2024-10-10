@@ -20,9 +20,14 @@ function scheduleMessages(client) {
 
 // Send a scheduled message (Good morning/night)
 async function sendScheduledMessage(client, subject, type) {
-  const channel = client.guilds.cache
-    .get('1225923654207016961') // Guild ID for Good Morning/Good Night
-    .channels.cache.get('1225944230921506846'); // Channel ID for Good Morning/Good Night
+    const channel = client.guilds.cache
+    .get('1225923654207016961')  // Guild ID for Good Morning/Good Night
+    ?.channels.cache.get('1225944230921506846');  // Channel ID for Good Morning/Good Night
+  
+  if (!channel) {
+    console.error('Channel not found!');
+    return;
+  }
 
   const unsentFacts = await Fact.find({ sent: false }).limit(1);
 

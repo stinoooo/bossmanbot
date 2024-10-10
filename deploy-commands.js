@@ -26,9 +26,9 @@ const rest = new REST({ version: '10' }).setToken(token);
 
     // Register guild commands (for faster updates during development)
     await rest.put(
-      Routes.applicationGuildCommands(clientId, guildId),
-      { body: commands }
-    );
+      Routes.applicationCommands(clientId),
+      { body: commands },
+    );    
 
     console.log('Successfully reloaded application (/) commands.');
   } catch (error) {
