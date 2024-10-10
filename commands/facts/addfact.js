@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const { MessageEmbed } = require('discord.js');
+const { EmbedBuilder } = require('discord.js');
 const { Fact, getNextFactId } = require('../../database/factModel');
 
 module.exports = {
@@ -15,7 +15,7 @@ module.exports = {
   async execute(interaction) {
     // Check if the user has permission to use this command
     if (interaction.user.id !== '186117507554344960') {
-      const errorEmbed = new MessageEmbed()
+      const errorEmbed = new EmbedBuilder()
         .setColor('#ff0000')
         .setTitle('Permission Denied')
         .setDescription('You do not have permission to use this command.')
@@ -30,7 +30,7 @@ module.exports = {
     // Check if the fact already exists in the database
     const existingFact = await Fact.findOne({ fact: factText });
     if (existingFact) {
-      const existingFactEmbed = new MessageEmbed()
+      const existingFactEmbed = new EmbedBuilder()
         .setColor('#ff0000')
         .setTitle('Fact Already Exists')
         .setDescription('This fact already exists in the database.')
@@ -52,11 +52,13 @@ module.exports = {
     await newFact.save();
 
     // Confirm the fact has been added using an embed
-    const successEmbed = new MessageEmbed()
+    const successEmbed = new EmbedBuilder()
       .setColor('#88d0ff')
       .setTitle('Fact Added Successfully')
-      .addField('Fact ID', factId.toString(), true)
-      .addField('Fact', factText, true)
+      .addFields(
+        { name: 'Fact ID', value: factId.toString(), inline: true },
+        { name: 'Fact', value: factText, inline: true }
+      )
       .setTimestamp();
 
     await interaction.reply({ embeds: [successEmbed], ephemeral: true });

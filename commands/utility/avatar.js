@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const { MessageEmbed } = require('discord.js');
+const { EmbedBuilder } = require('discord.js');
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -17,15 +17,15 @@ module.exports = {
     try {
       const member = await interaction.guild.members.fetch(user.id);
       const avatarUrl = member.user.displayAvatarURL({ dynamic: true, size: 1024 });
-      const bannerUrl = member.user.bannerURL({ dynamic: true, size: 1024 }) || 'No banner available.';
+      const bannerUrl = member.user.bannerURL({ dynamic: true, size: 1024 });
 
-      const embed = new MessageEmbed()
+      const embed = new EmbedBuilder()
         .setColor('#88d0ff')
         .setTitle(`${user.tag}'s Avatar & Banner`)
-        .setImage(avatarUrl)
-        .setDescription(`Avatar: [Link](${avatarUrl}) \nBanner: [Link](${bannerUrl})`);
+        .setDescription(`Avatar: [Link](${avatarUrl})${bannerUrl ? `\nBanner: [Link](${bannerUrl})` : '\nNo banner available.'}`)
+        .setImage(avatarUrl);
 
-      if (bannerUrl !== 'No banner available.') {
+      if (bannerUrl) {
         embed.setImage(bannerUrl);
       }
 

@@ -1,4 +1,4 @@
-const { Client, GatewayIntentBits, Collection, MessageEmbed, MessageActionRow, MessageButton } = require('discord.js');
+const { Client, GatewayIntentBits, Collection, EmbedBuilder, ActionRowBuilder, ButtonBuilder } = require('discord.js');
 const { scheduleMessages } = require('./utils/scheduler');
 const { connectDB } = require('./database/factModel');
 const fs = require('fs');
@@ -37,7 +37,7 @@ client.on('interactionCreate', async interaction => {
 
   // Check if the user is allowed to execute the command
   if (!config.allowedUsers.includes(interaction.user.id)) {
-    const embed = new MessageEmbed()
+    const embed = new EmbedBuilder()
       .setColor('#ff0000')
       .setTitle('Permission Denied')
       .setDescription('You do not have permission to use this command.')
@@ -49,7 +49,7 @@ client.on('interactionCreate', async interaction => {
 
   // Restrict access to the "facts" and "development" subfolders
   if (command.folder === 'facts' || command.folder === 'development') {
-    const embed = new MessageEmbed()
+    const embed = new EmbedBuilder()
       .setColor('#ff0000')
       .setTitle('Permission Denied')
       .setDescription('You do not have permission to use this command from the restricted folders.')
@@ -65,7 +65,7 @@ client.on('interactionCreate', async interaction => {
   } catch (error) {
     console.error(error);
 
-    const embed = new MessageEmbed()
+    const embed = new EmbedBuilder()
       .setColor('#ff0000')
       .setTitle('Error')
       .setDescription('There was an error executing this command.')
@@ -78,7 +78,7 @@ client.on('interactionCreate', async interaction => {
 // Handle direct messages
 client.on('messageCreate', async message => {
   if (message.channel.type === 'DM' && !message.author.bot) {
-    const embed = new MessageEmbed()
+    const embed = new EmbedBuilder()
       .setColor('#88d0ff')
       .setTitle('Sorry, I can\'t respond to direct messages')
       .setDescription(`
@@ -88,15 +88,15 @@ client.on('messageCreate', async message => {
       `)
       .setTimestamp();
 
-    const row = new MessageActionRow()
+    const row = new ActionRowBuilder()
       .addComponents(
-        new MessageButton()
+        new ButtonBuilder()
           .setLabel('Contact BUK Modmail')
-          .setStyle('LINK')
+          .setStyle('Link')
           .setURL('https://discordapp.com/channels/@me/1282748337711353927'),
-        new MessageButton()
+        new ButtonBuilder()
           .setLabel('Message Bossman')
-          .setStyle('LINK')
+          .setStyle('Link')
           .setURL('https://discordapp.com/channels/@me/915737986077974548')
       );
 

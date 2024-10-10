@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const { MessageEmbed } = require('discord.js');
+const { EmbedBuilder } = require('discord.js');
 const { Fact } = require('../../database/factModel');
 
 module.exports = {
@@ -23,7 +23,7 @@ module.exports = {
 
     // Check if at least one of the options is provided
     if (!factId && !factText) {
-      const errorEmbed = new MessageEmbed()
+      const errorEmbed = new EmbedBuilder()
         .setColor('#ff0000')
         .setTitle('Error')
         .setDescription('Please provide either a fact ID or a fact text.')
@@ -42,16 +42,18 @@ module.exports = {
     }
 
     if (removedFact) {
-      const successEmbed = new MessageEmbed()
+      const successEmbed = new EmbedBuilder()
         .setColor('#88d0ff')
         .setTitle('Fact Removed')
-        .addField('Fact', removedFact.fact, true)
-        .addField('Fact ID', removedFact.factId.toString(), true)
+        .addFields(
+          { name: 'Fact', value: removedFact.fact, inline: true },
+          { name: 'Fact ID', value: removedFact.factId.toString(), inline: true }
+        )
         .setTimestamp();
 
       await interaction.reply({ embeds: [successEmbed], ephemeral: true });
     } else {
-      const noFactFoundEmbed = new MessageEmbed()
+      const noFactFoundEmbed = new EmbedBuilder()
         .setColor('#ff0000')
         .setTitle('Error')
         .setDescription('No fact found with the provided details.')

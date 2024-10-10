@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const { MessageEmbed, MessageActionRow, MessageButton } = require('discord.js');
+const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -8,22 +8,22 @@ module.exports = {
 
   async execute(interaction) {
     const pages = [
-      new MessageEmbed()
+      new EmbedBuilder()
         .setColor('#88d0ff')
         .setTitle('Development Commands')
         .setDescription('`/eval`, `/reload`, `/setstatus`, `/shutdown`'),
 
-      new MessageEmbed()
+      new EmbedBuilder()
         .setColor('#88d0ff')
         .setTitle('Utility Commands')
         .setDescription('`/botinfo`, `/ping`, `/stats`, `/uptime`, `/userinfo`'),
 
-      new MessageEmbed()
+      new EmbedBuilder()
         .setColor('#88d0ff')
         .setTitle('Moderation Commands')
         .setDescription('`/announcement`, `/clear`, `/embedsay`, `/role`, `/say`'),
 
-      new MessageEmbed()
+      new EmbedBuilder()
         .setColor('#88d0ff')
         .setTitle('Fact Commands')
         .setDescription('`/addfact`, `/listfacts`, `/removefact`')
@@ -31,16 +31,16 @@ module.exports = {
 
     let currentPage = 0;
 
-    const row = new MessageActionRow().addComponents(
-      new MessageButton()
+    const row = new ActionRowBuilder().addComponents(
+      new ButtonBuilder()
         .setCustomId('prev')
         .setLabel('Previous')
-        .setStyle('PRIMARY')
+        .setStyle(ButtonStyle.Primary)
         .setDisabled(currentPage === 0),
-      new MessageButton()
+      new ButtonBuilder()
         .setCustomId('next')
         .setLabel('Next')
-        .setStyle('PRIMARY')
+        .setStyle(ButtonStyle.Primary)
         .setDisabled(currentPage === pages.length - 1)
     );
 
@@ -55,16 +55,16 @@ module.exports = {
         currentPage++;
       }
 
-      const updatedRow = new MessageActionRow().addComponents(
-        new MessageButton()
+      const updatedRow = new ActionRowBuilder().addComponents(
+        new ButtonBuilder()
           .setCustomId('prev')
           .setLabel('Previous')
-          .setStyle('PRIMARY')
+          .setStyle(ButtonStyle.Primary)
           .setDisabled(currentPage === 0),
-        new MessageButton()
+        new ButtonBuilder()
           .setCustomId('next')
           .setLabel('Next')
-          .setStyle('PRIMARY')
+          .setStyle(ButtonStyle.Primary)
           .setDisabled(currentPage === pages.length - 1)
       );
 
@@ -72,16 +72,16 @@ module.exports = {
     });
 
     collector.on('end', async () => {
-      const disabledRow = new MessageActionRow().addComponents(
-        new MessageButton()
+      const disabledRow = new ActionRowBuilder().addComponents(
+        new ButtonBuilder()
           .setCustomId('prev')
           .setLabel('Previous')
-          .setStyle('PRIMARY')
+          .setStyle(ButtonStyle.Primary)
           .setDisabled(true),
-        new MessageButton()
+        new ButtonBuilder()
           .setCustomId('next')
           .setLabel('Next')
-          .setStyle('PRIMARY')
+          .setStyle(ButtonStyle.Primary)
           .setDisabled(true)
       );
       await message.edit({ components: [disabledRow] });

@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const { MessageEmbed } = require('discord.js');
+const { EmbedBuilder } = require('discord.js');
 const sleep = require('../../utils/sleep'); // Custom sleep utility to handle delay
 const ms = require('ms');
 
@@ -7,10 +7,22 @@ module.exports = {
   data: new SlashCommandBuilder()
     .setName('dm')
     .setDescription('Sends a direct message to a user, multiple users, a role, or everyone.')
-    .addUserOption(option => option.setName('user').setDescription('The user to DM').setRequired(false))
-    .addStringOption(option => option.setName('role').setDescription('Role to DM').setRequired(false))
-    .addBooleanOption(option => option.setName('all').setDescription('DM all users').setRequired(false))
-    .addStringOption(option => option.setName('message').setDescription('The message to send').setRequired(true)),
+    .addUserOption(option => 
+      option.setName('user')
+        .setDescription('The user to DM')
+        .setRequired(false))
+    .addStringOption(option => 
+      option.setName('role')
+        .setDescription('Role to DM')
+        .setRequired(false))
+    .addBooleanOption(option => 
+      option.setName('all')
+        .setDescription('DM all users')
+        .setRequired(false))
+    .addStringOption(option => 
+      option.setName('message')
+        .setDescription('The message to send')
+        .setRequired(true)),
 
   async execute(interaction) {
     const user = interaction.options.getUser('user');
@@ -39,7 +51,7 @@ module.exports = {
 
     for (const recipient of recipients) {
       try {
-        const embed = new MessageEmbed()
+        const embed = new EmbedBuilder()
           .setColor(embedColor)
           .setTitle('Direct Message')
           .setDescription(messageContent);
@@ -53,12 +65,14 @@ module.exports = {
       await sleep(2000); // Add a delay between messages to avoid rate limiting
     }
 
-    const logEmbed = new MessageEmbed()
+    const logEmbed = new EmbedBuilder()
       .setColor(embedColor)
       .setTitle('DM Log')
       .setDescription(`DM Summary`)
-      .addField('Success', `${successCount} DMs sent`, true)
-      .addField('Failed', `${failureCount} DMs failed`, true)
+      .addFields(
+        { name: 'Success', value: `${successCount} DMs sent`, inline: true },
+        { name: 'Failed', value: `${failureCount} DMs failed`, inline: true }
+      )
       .setTimestamp();
 
     const logChannel = interaction.guild.channels.cache.get('1293876729668173868');

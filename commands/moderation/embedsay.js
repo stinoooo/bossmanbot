@@ -1,15 +1,19 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const { MessageEmbed } = require('discord.js');
+const { EmbedBuilder } = require('discord.js');
 
 module.exports = {
   data: new SlashCommandBuilder()
     .setName('embedsay')
     .setDescription('Sends a message in an embed')
-    .addStringOption(option => option.setName('message').setDescription('The message to send').setRequired(true)),
+    .addStringOption(option => 
+      option.setName('message')
+        .setDescription('The message to send')
+        .setRequired(true)
+    ),
 
   async execute(interaction) {
     const message = interaction.options.getString('message');
-    const embed = new MessageEmbed()
+    const embed = new EmbedBuilder()
       .setColor('#88d0ff')
       .setDescription(message);
 

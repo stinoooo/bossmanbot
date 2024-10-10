@@ -1,4 +1,4 @@
-const { MessageEmbed } = require('discord.js');
+const { EmbedBuilder } = require('discord.js');
 const { Fact, getNextFactId } = require('../database/factModel');
 
 // Schedule messages
@@ -71,11 +71,11 @@ async function sendScheduledMessage(client, subject, type) {
   `;
 
   // Create an embed for logging purposes
-  const embed = new MessageEmbed()
+  const embed = new EmbedBuilder()
     .setColor('#88d0ff')
     .setTitle(subject)
     .setDescription(fullMessage)
-    .setFooter(`Fact ID: ${fact.factId}`);
+    .setFooter({ text: `Fact ID: ${fact.factId}` });
 
   // Send the actual message and embed
   const sentMessage = await channel.send(fullMessage);
@@ -95,15 +95,17 @@ async function sendScheduledMessage(client, subject, type) {
 async function logSentFact(client, fact, message) {
   const logChannel = client.channels.cache.get('1293845754598920223'); // Channel for logging sent facts
 
-  const logEmbed = new MessageEmbed()
+  const logEmbed = new EmbedBuilder()
     .setColor('#88d0ff')
     .setTitle('Fact Sent')
-    .addField('Fact ID', fact.factId.toString(), true)
-    .addField('Fact', fact.fact, true)
-    .addField('Date', fact.sentAt.toDateString(), true)
-    .addField('Time', fact.sentAt.toLocaleTimeString(), true)
-    .addField('Message Link', `[Jump to message](${message.url})`, true)
-    .addField('Remaining Facts', (await Fact.countDocuments({ sent: false })).toString(), true);
+    .addFields(
+      { name: 'Fact ID', value: fact.factId.toString(), inline: true },
+      { name: 'Fact', value: fact.fact, inline: true },
+      { name: 'Date', value: fact.sentAt.toDateString(), inline: true },
+      { name: 'Time', value: fact.sentAt.toLocaleTimeString(), inline: true },
+      { name: 'Message Link', value: `[Jump to message](${message.url})`, inline: true },
+      { name: 'Remaining Facts', value: (await Fact.countDocuments({ sent: false })).toString(), inline: true }
+    );
 
   await logChannel.send({ embeds: [logEmbed] });
 }
@@ -113,11 +115,11 @@ async function notifyLowFacts(client, remainingFacts) {
   const daysLeft = Math.floor(remainingFacts / 2); // 2 facts per day
   const notificationChannel = client.channels.cache.get('1293839644739375104'); // Low fact count alert channel
 
-  const embed = new MessageEmbed()
+  const embed = new EmbedBuilder()
     .setColor('#88d0ff')
     .setTitle('Low Fact Count Alert')
     .setDescription(`Only **${remainingFacts} facts** are left. That's enough for **${daysLeft} days**. Please use the /addfact command to add more facts.`)
-    .addField('Repository', '[Click here to view the repository](https://github.com/stinoooo/bossmanbot)', false);
+    .addFields({ name: 'Repository', value: '[Click here to view the repository](https://github.com/stinoooo/bossmanbot)', inline: false });
 
   await notificationChannel.send(`<@186117507554344960>`, { embeds: [embed] });
 }
@@ -126,11 +128,11 @@ async function notifyLowFacts(client, remainingFacts) {
 async function notifyNoFactsLeft(client) {
   const noFactsChannel = client.channels.cache.get('1293869589897150484'); // Alert channel when no facts are left
 
-  const embed = new MessageEmbed()
+  const embed = new EmbedBuilder()
     .setColor('#ff0000')
     .setTitle('No Facts Left')
     .setDescription('There are no unsent facts remaining. Please add new facts using the /addfact command.')
-    .addField('Repository', '[Click here to view the repository](https://github.com/stinoooo/bossmanbot)', false)
+    .addFields({ name: 'Repository', value: '[Click here to view the repository](https://github.com/stinoooo/bossmanbot)', inline: false })
     .setTimestamp();
 
   await noFactsChannel.send(`<@186117507554344960>`, { embeds: [embed] });
@@ -140,12 +142,14 @@ async function notifyNoFactsLeft(client) {
 async function logFactAdded(client, fact) {
   const logChannel = client.channels.cache.get('1293845811150721075'); // Channel for logging added facts
 
-  const embed = new MessageEmbed()
+  const embed = new EmbedBuilder()
     .setColor('#88d0ff')
     .setTitle('New Fact Added')
-    .addField('Fact ID', fact.factId.toString(), true)
-    .addField('Fact', fact.fact, true)
-    .addField('Added At', fact.addedAt.toDateString() + ' ' + fact.addedAt.toLocaleTimeString(), true);
+    .addFields(
+      { name: 'Fact ID', value: fact.factId.toString(), inline: true },
+      { name: 'Fact', value: fact.fact, inline: true },
+      { name: 'Added At', value: fact.addedAt.toDateString() + ' ' + fact.addedAt.toLocaleTimeString(), inline: true }
+    );
 
   await logChannel.send({ embeds: [embed] });
 }
@@ -154,12 +158,14 @@ async function logFactAdded(client, fact) {
 async function logFactRemoved(client, fact) {
   const logChannel = client.channels.cache.get('1293845825885306941'); // Channel for logging removed facts
 
-  const embed = new MessageEmbed()
+  const embed = new EmbedBuilder()
     .setColor('#ff0000')
     .setTitle('Fact Removed')
-    .addField('Fact ID', fact.factId.toString(), true)
-    .addField('Fact', fact.fact, true)
-    .addField('Removed At', new Date().toDateString() + ' ' + new Date().toLocaleTimeString(), true);
+    .addFields(
+      { name: 'Fact ID', value: fact.factId.toString(), inline: true },
+      { name: 'Fact', value: fact.fact, inline: true },
+      { name: 'Removed At', value: new Date().toDateString() + ' ' + new Date().toLocaleTimeString(), inline: true }
+    );
 
   await logChannel.send({ embeds: [embed] });
 }

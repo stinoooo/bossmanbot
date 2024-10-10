@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const { MessageEmbed } = require('discord.js');
+const { EmbedBuilder } = require('discord.js');
 const { Fact } = require('../../database/factModel');
 
 module.exports = {
@@ -12,7 +12,7 @@ module.exports = {
     const facts = await Fact.find();
 
     if (!facts.length) {
-      const noFactsEmbed = new MessageEmbed()
+      const noFactsEmbed = new EmbedBuilder()
         .setColor('#ff0000')
         .setTitle('No Facts Found')
         .setDescription('There are currently no facts in the database.')
@@ -30,7 +30,7 @@ module.exports = {
     }).join('\n\n');
 
     // Use an embed to display the facts
-    const embed = new MessageEmbed()
+    const embed = new EmbedBuilder()
       .setColor('#88d0ff')
       .setTitle('Fun Facts')
       .setDescription(factList.length > 2048 ? factList.slice(0, 2048) : factList) // Ensure within Discord character limits
