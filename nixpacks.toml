@@ -1,18 +1,12 @@
 [build]
 builder = "nixpacks"
-# Install dependencies and show a message during the build process
 buildCommand = "npm install && echo Building bossmanbot!"
 
 [phases]
-  # Specify the Node.js version as per your package.json engines field
   [phases.build]
   runtime = "nodejs@16.5.0"
 
 [deploy]
-# Start the bot using the main.js entry point
 startCommand = "node main.js"
-
-# Optional: Healthcheck settings (though typically not necessary for a bot)
-healthcheckPath = "/"
-healthcheckTimeout = 100
 restartPolicyType = "always"
+# Remove the healthcheck since the bot is not a web service
