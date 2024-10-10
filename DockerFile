@@ -1,0 +1,23 @@
+# Use an official Node.js runtime as the base image (v16 or v18)
+FROM node:16-alpine
+
+# Set the working directory inside the container
+WORKDIR /app
+
+# Copy package.json and package-lock.json into the container
+COPY package*.json ./
+
+# Install all dependencies
+RUN npm install
+
+# Copy the rest of the application files into the container
+COPY . .
+
+# Expose the port the bot will be running on (optional, typically not needed for Discord bots)
+EXPOSE 3000
+
+# Set the environment variable to production
+ENV NODE_ENV=production
+
+# Command to run your application
+CMD ["npm", "start"]
