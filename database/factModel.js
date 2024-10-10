@@ -29,4 +29,19 @@ async function getNextFactId() {
   return counter.seq;
 }
 
-module.exports = { Fact, getNextFactId };
+// Function to connect to MongoDB
+async function connectDB(mongoURI) {
+  try {
+    await mongoose.connect(mongoURI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+    console.log('MongoDB connected successfully');
+  } catch (err) {
+    console.error('Error connecting to MongoDB:', err);
+    process.exit(1);  // Exit the process with an error code
+  }
+}
+
+// Export everything
+module.exports = { Fact, getNextFactId, connectDB };
