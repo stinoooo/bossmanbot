@@ -37,4 +37,7 @@
 - `/ping`: Returns the bot’s latency.
 - `/stats`: Displays bot performance stats like memory usage and CPU load.
 - `/uptime`: Shows how long the bot has been online.
-- `/userinfo`: Provides detailed information about a user.
+- `/userinfo`: Provides detailed information about a user, including account age, roles, and more.
+- `/setavatar`: Changes the bot’s profile picture.
+- `/setbanner`: Changes the bot’s banner.
+- `/avatar [user]`: Enlarges and displays a user's profile picture and banner.
