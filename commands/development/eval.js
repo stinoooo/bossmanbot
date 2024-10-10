@@ -11,7 +11,6 @@ module.exports = {
     ),
 
   async execute(interaction) {
-    // Replace 'YOUR_ID' with your actual Discord user ID
     if (interaction.user.id !== '186117507554344960') {
       return interaction.reply('You do not have permission to run this command.');
     }
