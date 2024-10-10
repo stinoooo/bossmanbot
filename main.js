@@ -1,4 +1,4 @@
-const { Client, GatewayIntentBits, Collection, MessageEmbed } = require('discord.js');
+const { Client, GatewayIntentBits, Collection, MessageEmbed, MessageActionRow, MessageButton } = require('discord.js');
 const { scheduleMessages } = require('./utils/scheduler');
 const { connectDB } = require('./database/factModel');
 const fs = require('fs');
@@ -10,7 +10,8 @@ const mongoURI = process.env.MONGO_URI;  // Get MongoDB URI from Railway environ
 const config = require('./config.json');  // config.json only stores allowed users now
 
 const client = new Client({
-  intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages],
+  intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.DirectMessages],
+  partials: ['CHANNEL'] // Necessary to handle direct messages
 });
 
 client.commands = new Collection();
@@ -23,7 +24,6 @@ for (const folder of commandFolders) {
 
   for (const file of commandFiles) {
     const command = require(`./commands/${folder}/${file}`);
-    // Store the folder as part of the command metadata to check for restrictions
     client.commands.set(command.data.name, { ...command, folder });
   }
 }
@@ -72,6 +72,35 @@ client.on('interactionCreate', async interaction => {
       .setTimestamp();
 
     await interaction.reply({ embeds: [embed], ephemeral: true });
+  }
+});
+
+// Handle direct messages
+client.on('messageCreate', async message => {
+  if (message.channel.type === 'DM' && !message.author.bot) {
+    const embed = new MessageEmbed()
+      .setColor('#88d0ff')
+      .setTitle('Sorry, I can\'t respond to direct messages')
+      .setDescription(`
+        Unfortunately, I am unable to read or reply to your messages here. 
+        If you meant to message the **BUK Moderation team** or **bossman**, you can do so using the buttons below.
+        Please note that **bossman's DMs** are always closed to non-friends, and he rarely accepts friend requests.
+      `)
+      .setTimestamp();
+
+    const row = new MessageActionRow()
+      .addComponents(
+        new MessageButton()
+          .setLabel('Contact BUK Modmail')
+          .setStyle('LINK')
+          .setURL('https://discordapp.com/channels/@me/1282748337711353927'),
+        new MessageButton()
+          .setLabel('Message Bossman')
+          .setStyle('LINK')
+          .setURL('https://discordapp.com/channels/@me/915737986077974548')
+      );
+
+    await message.reply({ embeds: [embed], components: [row] });
   }
 });
 
