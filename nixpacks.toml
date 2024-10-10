@@ -1,2 +1,12 @@
-[phases.build]
-version = "16.13.0"  # or any other compatible version like "18.x"
+[phases]
+  [phases.build]
+  # Using Node.js version specified in package.json
+  runtime = "nodejs@16.5.0"
+
+# Override default start command
+[phases.start]
+  run = "node main.js"
+
+# Specify environment variables if needed (optional, you can use Railway's UI for this)
+[env]
+  NODE_ENV = "production"
