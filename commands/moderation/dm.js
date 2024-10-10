@@ -7,6 +7,10 @@ module.exports = {
   data: new SlashCommandBuilder()
     .setName('dm')
     .setDescription('Sends a direct message to a user, multiple users, a role, or everyone.')
+    .addStringOption(option => 
+      option.setName('message')
+        .setDescription('The message to send')
+        .setRequired(true))
     .addUserOption(option => 
       option.setName('user')
         .setDescription('The user to DM')
@@ -18,11 +22,7 @@ module.exports = {
     .addBooleanOption(option => 
       option.setName('all')
         .setDescription('DM all users')
-        .setRequired(false))
-    .addStringOption(option => 
-      option.setName('message')
-        .setDescription('The message to send')
-        .setRequired(true)),
+        .setRequired(false)),
 
   async execute(interaction) {
     const user = interaction.options.getUser('user');
