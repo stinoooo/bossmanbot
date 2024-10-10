@@ -10,7 +10,14 @@ const mongoURI = process.env.MONGO_URI;  // Get MongoDB URI from Railway environ
 const config = require('./config.json');  // config.json only stores allowed users now
 
 const client = new Client({
-  intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.DirectMessages],
+    intents: [
+        GatewayIntentBits.Guilds,
+        GatewayIntentBits.GuildMessages,
+        GatewayIntentBits.MessageContent,  // Ensure MessageContent intent for DM handling
+        GatewayIntentBits.GuildPresences,  // Needed for presence management
+        GatewayIntentBits.DirectMessages
+      ],
+      
   partials: ['CHANNEL'] // Necessary to handle direct messages
 });
 
