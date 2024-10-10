@@ -1,12 +1,18 @@
+[build]
+builder = "nixpacks"
+# Install dependencies and show a message during the build process
+buildCommand = "npm install && echo Building bossmanbot!"
+
 [phases]
+  # Specify the Node.js version as per your package.json engines field
   [phases.build]
-  # Using Node.js version specified in package.json
   runtime = "nodejs@16.5.0"
 
-# Override default start command
-[phases.start]
-  run = "node main.js"
+[deploy]
+# Start the bot using the main.js entry point
+startCommand = "node main.js"
 
-# Specify environment variables if needed (optional, you can use Railway's UI for this)
-[env]
-  NODE_ENV = "production"
+# Optional: Healthcheck settings (though typically not necessary for a bot)
+healthcheckPath = "/"
+healthcheckTimeout = 100
+restartPolicyType = "always"
