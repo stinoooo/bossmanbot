@@ -106,17 +106,18 @@ client.on('messageCreate', async message => {
 
 // Initialize the bot, connect to the database using environment variables, and set the default status
 client.once('ready', async () => {
-  await connectDB(mongoURI);  // Pass the MongoDB URI from environment variables
-  console.log(`Logged in as ${client.user.tag}`);
-
-  // Set default status to 'Listening to bossman' and online status to 'idle'
-  client.user.setPresence({
-    status: 'idle',
-    activities: [{ name: 'bossman', type: 'LISTENING' }],
+    await connectDB(mongoURI);  // Pass the MongoDB URI from environment variables
+    console.log(`Logged in as ${client.user.tag}`);
+  
+    // Set default status to 'Listening to bossman' and online status to 'idle'
+    client.user.setPresence({
+      activities: [{ name: 'bossman', type: 'LISTENING' }],
+      status: 'idle'
+    });
+  
+    scheduleMessages(client);
   });
-
-  scheduleMessages(client);
-});
+  
 
 // Log in using the token from environment variables
 client.login(token);
